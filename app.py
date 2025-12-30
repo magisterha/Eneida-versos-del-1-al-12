@@ -2,8 +2,7 @@ import streamlit as st
 import google.generativeai as genai
 import requests
 
-# 1. DICCIONARIO DE TRADUCCIONES INTEGRAL
-# Incluye el texto del botón de reserva para cada idioma.
+# 1. DICCIONARIO DE TRADUCCIONES (Mantenemos tu estructura multilingüe)
 TRADUCCIONES = {
     "Español": {
         "sidebar_title": "🏛️ Configuración",
@@ -14,7 +13,7 @@ TRADUCCIONES = {
         "welcome": "### 🏛️ ¡Salve!\nHe configurado mi sistema para ayudarte en **Español**. ¿Qué palabra o verso deseas analizar?",
         "input_placeholder": "Pregúntale a la IA (ej. cano, arma, virum...)",
         "spinner": "Analizando bajo contexto...",
-        "error_api": "🏛️ El oráculo está saturado. Reintenta en breve.",
+        "error_api": "🏛️ El oráculo está saturado o ha habido un error de conexión. Reintenta en breve.",
         "sticky_note": "📍 Texto fijo para consulta permanente.",
         "cta_btn": "🏛️ Reserva una clase con un profesor de latín"
     },
@@ -27,7 +26,7 @@ TRADUCCIONES = {
         "welcome": "### 🏛️ Salve!\nI have configured my system to help you in **English**. Which word or verse would you like to analyze?",
         "input_placeholder": "Ask the AI (e.g., cano, arma, virum...)",
         "spinner": "Analyzing contextually...",
-        "error_api": "🏛️ The oracle is busy. Please try again in a moment.",
+        "error_api": "🏛️ The oracle is busy or there was a connection error. Please try again.",
         "sticky_note": "📍 Static text for permanent reference.",
         "cta_btn": "🏛️ Book a class with a Latin teacher"
     },
@@ -59,41 +58,27 @@ TRADUCCIONES = {
     }
 }
 
-# 2. CONFIGURACIÓN DE PÁGINA Y CSS (Columna Fija)
+# 2. CONFIGURACIÓN DE PÁGINA Y CSS
 st.set_page_config(page_title="Aeneis Tutor AI", layout="wide")
 
 st.markdown("""
     <style>
-    [data-testid="column"]:nth-of-type(1) {
-        position: sticky;
-        top: 2rem;
-        align-self: flex-start;
-    }
-    .verse-line {
-        font-family: 'Times New Roman', serif;
-        font-size: 1.4rem;
-        line-height: 1.7;
-        color: #2c3e50;
-        margin-bottom: 5px;
-    }
-    .main-header {
-        color: #8e44ad;
-        font-weight: bold;
-    }
+    [data-testid="column"]:nth-of-type(1) { position: sticky; top: 2rem; align-self: flex-start; }
+    .verse-line { font-family: 'Times New Roman', serif; font-size: 1.4rem; line-height: 1.7; color: #2c3e50; margin-bottom: 5px; }
+    .main-header { color: #8e44ad; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. SIDEBAR MULTILINGÜE
+# 3. SIDEBAR
 with st.sidebar:
     idioma_app = st.selectbox("Language / Idioma / 語言", list(TRADUCCIONES.keys()))
     t = TRADUCCIONES[idioma_app]
-    
     st.title(t["sidebar_title"])
     if st.button(t["reset_btn"]):
         st.session_state.messages = []
         st.rerun()
 
-# 4. CONFIGURACIÓN DE IA
+# 4. CARGA DE PROMPT Y CONFIGURACIÓN DE MODELO
 @st.cache_data
 def load_prompt(url):
     try:
@@ -107,34 +92,21 @@ sys_instruction = load_prompt(PROMPT_URL)
 if "GEMINI_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash-lite-preview-02-05",
+        model_name="gemini-2.0-flash-lite-preview-02-05", #
         system_instruction=sys_instruction
     )
 else:
     st.error("⚠️ API KEY missing in Secrets.")
     st.stop()
 
-# 5. DISEÑO DE PANTALLA DIVIDIDA
+# 5. DISEÑO DE INTERFAZ
 col_txt, col_chat = st.columns([1, 1], gap="large")
 
 with col_txt:
     st.markdown(f"<h2 class='main-header'>{t['header']}</h2>", unsafe_allow_html=True)
     st.write("---")
-    versos = [
-        "1. Arma virumque canō, Trōiae quī prīmus ab ōrīs",
-        "2. Ītaliam, fātō profugus, Lāvīniaque vēnit",
-        "3. lītora, multum ille et terrīs iactātus et altō",
-        "4. vī superum saevae memorem Iūnōnis ob īram;",
-        "5. multa quoque et bellō passus, dum conderet urbem,",
-        "6. inferretque deōs Latiō, genus unde Latīnum,",
-        "7. Albānīque patrēs, atque altae moenia Rōmae.",
-        "8. Mūsa, mihī causās memorā, quō nūmine laesō,",
-        "9. quidve dolēns, rēgīna deum tot volvere cāsūs",
-        "10. īnsīgnem pietāte virum, tot adīre labōrēs",
-        "11. impulerit. Tantaene animīs caelestibus īrae?"
-    ]
-    for v in versos:
-        st.markdown(f'<p class="verse-line">{v}</p>', unsafe_allow_html=True)
+    versos = ["1. Arma virumque canō, Trōiae quī prīmus ab ōrīs", "2. Ītaliam, fātō profugus, Lāvīniaque vēnit", "3. lītora, multum ille et terrīs iactātus et altō", "4. vī superum saevae memorem Iūnōnis ob īram;", "5. multa quoque et bellō passus, dum conderet urbem,", "6. inferretque deōs Latiō, genus unde Latīnum,", "7. Albānīque patrēs, atque altae moenia Rōmae.", "8. Mūsa, mihī causās memorā, quō nūmine laesō,", "9. quidve dolēns, rēgīna deum tot volvere cāsūs", "10. īnsīgnem pietāte virum, tot adīre labōrēs", "11. impulerit. Tantaene animīs caelestibus īrae?"]
+    for v in versos: st.markdown(f'<p class="verse-line">{v}</p>', unsafe_allow_html=True)
     st.caption(t["sticky_note"])
 
 with col_chat:
@@ -146,36 +118,44 @@ with col_chat:
 
     with chat_container:
         for m in st.session_state.messages:
-            with st.chat_message(m["role"]):
-                st.markdown(m["content"])
+            with st.chat_message(m["role"]): st.markdown(m["content"])
 
     if prompt := st.chat_input(t["input_placeholder"]):
+        # 1. Añadimos el mensaje del usuario al estado
         st.session_state.messages.append({"role": "user", "content": prompt})
+        
+        # 2. Mostramos inmediatamente el mensaje en la UI
         with chat_container:
-            with st.chat_message("user"):
-                st.markdown(prompt)
+            with st.chat_message("user"): st.markdown(prompt)
+            
             with st.chat_message("assistant"):
-                # REFUERZO DE CONTEXTO Y IDIOMA
+                # --- CORRECCIÓN CRÍTICA: MAPEO DE ROLES ---
+                # Gemini no acepta "assistant", solo "model".
+                history_for_api = []
+                for m in st.session_state.messages[:-1]:
+                    api_role = "model" if m["role"] == "assistant" else "user"
+                    history_for_api.append({"role": api_role, "parts": [m["content"]]})
+                
+                # Preparamos la consulta con refuerzo de contexto
                 full_query = (
                     f"[Language: {idioma_app}] "
-                    f"[MANDATO: Ignora español. Solo Latín de Virgilio. "
+                    f"[MANDATO: Ignora español para homógrafos. Solo Latín de Virgilio. "
                     f"Foco: Significado filológico contextual. Sé breve.] "
                     f"{prompt}"
                 )
                 
-                history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages[:-1]]
-                chat = model.start_chat(history=history)
-                
                 try:
+                    chat = model.start_chat(history=history_for_api)
                     with st.spinner(t["spinner"]):
                         response = chat.send_message(full_query)
                         st.markdown(response.text)
+                        # Guardamos con el rol de Streamlit
                         st.session_state.messages.append({"role": "assistant", "content": response.text})
-                except Exception:
-                    st.error(t["error_api"])
+                except Exception as e:
+                    st.error(f"{t['error_api']} (Detalle: {str(e)})")
+        
+        # Rerun controlado para refrescar el contenedor
         st.rerun()
 
-    # --- ENLACE PARA CLASE CON PROFESOR (CTA) ---
     st.divider()
-    form_url = "https://docs.google.com/forms/d/e/1FAIpQLSdcEGs0k3eO1A3yDwwlRPZxM7RPpOPVD121J6GMUwAgbtbQ5w/viewform?usp=header"
-    st.link_button(t["cta_btn"], form_url, use_container_width=True, type="primary")
+    st.link_button(t["cta_btn"], "https://docs.google.com/forms/d/...", use_container_width=True, type="primary")
