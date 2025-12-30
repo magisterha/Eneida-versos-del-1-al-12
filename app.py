@@ -2,47 +2,37 @@ import streamlit as st
 import google.generativeai as genai
 import requests
 
-# 1. Configuración de la página
+# 1. Configuración de la página (Layout ancho para dividir la pantalla)
 st.set_page_config(
     page_title="Aeneis Tutor AI",
+    page_icon="🏛️",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# 2. CSS AVANZADO: Fijación de columna (Sticky) y limpieza visual
-# Este bloque elimina el rectángulo beige y asegura que la columna de texto no se mueva.
+# 2. CSS PERSONALIZADO: Estética y fijación de texto
 st.markdown("""
     <style>
-    /* 1. Hacer que la primera columna sea pegajosa (Sticky) */
-    [data-testid="column"]:nth-of-type(1) {
-        position: sticky;
-        top: 2rem;
-        align-self: flex-start;
-        height: fit-content;
+    /* Estilo para los versos de la Eneida */
+    .verse-line {
+        font-family: 'Times New Roman', serif;
+        font-size: 1.4rem;
+        line-height: 1.8;
+        color: #2c3e50;
+        margin-bottom: 5px;
     }
-
-    /* 2. Estética de los versos (Sin fondos beige) */
     .main-header {
         color: #8e44ad;
         font-weight: bold;
-        margin-bottom: 0px;
+        margin-bottom: 20px;
     }
-    .verse-line {
-        font-family: 'Times New Roman', serif;
-        font-size: 1.35rem;
-        line-height: 1.6;
-        color: #2c3e50;
-        margin-bottom: 8px;
-    }
-
-    /* 3. Ajuste de espaciado para evitar saltos visuales */
-    .stApp {
-        background-color: white;
-    }
+    /* Ocultar elementos innecesarios para máxima limpieza */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
-# 3. Función para cargar el Prompt Maestro desde GitHub
+# 3. Carga del Prompt Maestro desde GitHub
 @st.cache_data
 def load_prompt(url):
     try:
@@ -53,12 +43,11 @@ def load_prompt(url):
     except Exception as e:
         return f"Error de conexión: {str(e)}"
 
-# --- CONFIGURACIÓN DE RECURSOS ---
 # REEMPLAZA CON TU URL REAL DE GITHUB
 GITHUB_RAW_URL = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/prompt_maestro.txt"
 master_prompt_content = load_prompt(GITHUB_RAW_URL)
 
-# Inicialización de Gemini 2.5 Flash Lite (Diciembre 2025)
+# Inicialización de Gemini 2.5 Flash Lite (Configuración para diciembre 2025)
 if "GEMINI_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel(
@@ -69,12 +58,12 @@ else:
     st.error("⚠️ Configura la API KEY en los Secrets de Streamlit.")
     st.stop()
 
-# 4. Diseño de Pantalla Dividida
+# 4. DISEÑO DE PANTALLA DIVIDIDA
 col_texto, col_chat = st.columns([1, 1], gap="large")
 
+# --- COLUMNA IZQUIERDA: TEXTO FIJO ---
 with col_texto:
     st.markdown("<h2 class='main-header'>P. Vergili Maronis: Aeneis (I, 1-11)</h2>", unsafe_allow_html=True)
-    st.write("---")
     
     versos = [
         "1. Arma virumque canō, Trōiae quī prīmus ab ōrīs",
@@ -90,55 +79,57 @@ with col_texto:
         "11. impulerit. Tantaene animīs caelestibus īrae?"
     ]
     
-    # Renderizado de los versos (Limpio, sin cajas de color)
+    # Renderizado estático
     for v in versos:
         st.markdown(f'<div class="verse-line">{v}</div>', unsafe_allow_html=True)
     
-    st.write("---")
-    st.caption("📍 El texto permanecerá fijo mientras el chat se desplaza.")
+    st.divider()
+    st.caption("📍 El texto de la Eneida permanece estático para facilitar su consulta.")
 
+# --- COLUMNA DERECHA: CHAT CON SCROLL INDEPENDIENTE ---
 with col_chat:
     st.subheader("💬 Guía Filológica Interactiva")
     
-    # Inicialización del chat
+    # Contenedor de chat con altura fija para permitir scroll independiente
+    chat_container = st.container(height=600, border=True)
+
     if "messages" not in st.session_state:
-        # Mensaje de bienvenida multilingüe directo
-        welcome_text = """
-### 🏛️ Salve, discipule!
-Por favor, elige tu idioma para comenzar / Please choose your language:
-* **Español** | **English** | **Latine** | **繁體中文**
-        """
+        welcome_text = "### 🏛️ Salve, discipule!\nPor favor, elige tu idioma para comenzar:\n* **Español** | **English** | **Latine** | **繁體中文**"
         st.session_state.messages = [{"role": "assistant", "content": welcome_text}]
 
-    # Mostrar historial
-    for m in st.session_state.messages:
-        with st.chat_message(m["role"]):
-            st.markdown(m["content"])
+    # Mostrar mensajes dentro del contenedor con scroll
+    with chat_container:
+        for m in st.session_state.messages:
+            with st.chat_message(m["role"]):
+                st.markdown(m["content"])
 
-    # Entrada del usuario
+    # Entrada de chat (fuera del contenedor de mensajes para que siempre esté visible abajo)
     if prompt := st.chat_input("Escribe tu idioma o respuesta..."):
+        # Guardar y mostrar mensaje del usuario
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
+        with chat_container:
+            with st.chat_message("user"):
+                st.markdown(prompt)
 
-        with st.chat_message("assistant"):
-            # Lógica para forzar el inicio del análisis tras la elección del idioma
-            # Si solo hay un mensaje (la bienvenida), el siguiente input es el idioma.
-            if len(st.session_state.messages) <= 2:
-                command = f"El idioma elegido es {prompt}. ANALIZA AHORA el Bloque 1: 'Arma virumque canō' siguiendo estrictamente tu protocolo de Verbo Primero y análisis morfológico."
-            else:
-                command = prompt
+            # Generar respuesta de la IA
+            with st.chat_message("assistant"):
+                if len(st.session_state.messages) <= 2:
+                    command = f"El idioma elegido es {prompt}. ANALIZA AHORA el Bloque 1."
+                else:
+                    command = prompt
 
-            # Llamada a la API con historial
-            history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages[:-1]]
-            chat = model.start_chat(history=history)
-            
-            with st.spinner("Consultando al oráculo filológico..."):
-                response = chat.send_message(command)
-                st.markdown(response.text)
-                st.session_state.messages.append({"role": "assistant", "content": response.text})
+                history = [{"role": m["role"], "parts": [m["content"]]} for m in st.session_state.messages[:-1]]
+                chat = model.start_chat(history=history)
+                
+                with st.spinner("Consultando al tutor..."):
+                    response = chat.send_message(command)
+                    st.markdown(response.text)
+                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+        
+        # Forzar recarga para que el contenedor se deslice al final
+        st.rerun()
 
-    # BOTÓN DE RESERVA (Al final de la columna de chat)
+    # Botón de reserva (Anclado al final de la columna de chat)
     st.divider()
     cta_url = "https://docs.google.com/forms/d/e/1FAIpQLSdcEGs0k3eO1A3yDwwlRPZxM7RPpOPVD121J6GMUwAgbtbQ5w/viewform?usp=header"
     st.link_button("🏛️ Reserva una clase con un profesor de latín", cta_url, use_container_width=True, type="primary")
