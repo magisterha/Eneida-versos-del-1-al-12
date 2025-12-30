@@ -2,7 +2,15 @@ import streamlit as st
 import google.generativeai as genai
 import requests
 
-# 1. DICCIONARIO DE TRADUCCIONES (Mantenemos tu estructura multilingüe)
+# --- 1. CONFIGURACIÓN DE LA PÁGINA ---
+st.set_page_config(
+    page_title="Aeneis Tutor AI",
+    page_icon="🏛️",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
+# --- 2. DICCIONARIO DE TRADUCCIONES (Frontend) ---
 TRADUCCIONES = {
     "Español": {
         "sidebar_title": "🏛️ Configuración",
@@ -12,8 +20,8 @@ TRADUCCIONES = {
         "chat_header": "💬 Consulta Filológica Libre",
         "welcome": "### 🏛️ ¡Salve!\nHe configurado mi sistema para ayudarte en **Español**. ¿Qué palabra o verso deseas analizar?",
         "input_placeholder": "Pregúntale a la IA (ej. cano, arma, virum...)",
-        "spinner": "Analizando bajo contexto...",
-        "error_api": "🏛️ El oráculo está saturado o ha habido un error de conexión. Reintenta en breve.",
+        "spinner": "Analizando...",
+        "error_api": "🏛️ El oráculo está saturado. Espera un momento.",
         "sticky_note": "📍 Texto fijo para consulta permanente.",
         "cta_btn": "🏛️ Reserva una clase con un profesor de latín"
     },
@@ -25,8 +33,8 @@ TRADUCCIONES = {
         "chat_header": "💬 Free Philological Consultation",
         "welcome": "### 🏛️ Salve!\nI have configured my system to help you in **English**. Which word or verse would you like to analyze?",
         "input_placeholder": "Ask the AI (e.g., cano, arma, virum...)",
-        "spinner": "Analyzing contextually...",
-        "error_api": "🏛️ The oracle is busy or there was a connection error. Please try again.",
+        "spinner": "Analyzing...",
+        "error_api": "🏛️ The oracle is busy. Please wait.",
         "sticky_note": "📍 Static text for permanent reference.",
         "cta_btn": "🏛️ Book a class with a Latin teacher"
     },
@@ -40,7 +48,7 @@ TRADUCCIONES = {
         "input_placeholder": "Interrogā aliquid (ex. cano, arma, virum...)",
         "spinner": "Exquīrentem...",
         "error_api": "🏛️ Ōrāculum occupātum est. Paulō post sevērā.",
-        "sticky_note": "📍 Textus fīxus ad perpetuam cōnsultātiōnem.",
+        "sticky_note": "📍 Textus fīxus.",
         "cta_btn": "🏛️ Scholam cum magistro linguae Latinae reserva"
     },
     "繁體中文 (Taiwan)": {
@@ -49,27 +57,25 @@ TRADUCCIONES = {
         "reset_btn": "🔄 重置對話",
         "header": "維吉爾：《埃涅阿斯紀》(I, 1-11)",
         "chat_header": "💬 自由文獻學諮詢",
-        "welcome": "### 🏛️ 您好 (Salve)！\n我已準備好以 **繁體中文** 為您提供幫助。您想分析文中的哪個詞或哪一行？",
+        "welcome": "### 🏛️ 您好！\n我已準備好以 **繁體中文** 為您提供幫助。您想分析文中的哪個詞或哪一行？",
         "input_placeholder": "向 AI 詢問（例如：cano, arma, virum...）",
-        "spinner": "正在進行語境分析...",
+        "spinner": "分析中...",
         "error_api": "🏛️ 神諭目前繁忙。請稍後再試。",
-        "sticky_note": "📍 文本已固定，方便隨時查閱。",
+        "sticky_note": "📍 文本已固定。",
         "cta_btn": "🏛️ 與拉丁語老師預約課程"
     }
 }
 
-# 2. CONFIGURACIÓN DE PÁGINA Y CSS
-st.set_page_config(page_title="Aeneis Tutor AI", layout="wide")
-
+# --- 3. CSS PARA COLUMNA FIJA ---
 st.markdown("""
     <style>
     [data-testid="column"]:nth-of-type(1) { position: sticky; top: 2rem; align-self: flex-start; }
-    .verse-line { font-family: 'Times New Roman', serif; font-size: 1.4rem; line-height: 1.7; color: #2c3e50; margin-bottom: 5px; }
+    .verse-line { font-family: 'Times New Roman', serif; font-size: 1.4rem; line-height: 1.7; color: #2c3e50; }
     .main-header { color: #8e44ad; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
 
-# 3. SIDEBAR
+# --- 4. SIDEBAR MULTILINGÜE ---
 with st.sidebar:
     idioma_app = st.selectbox("Language / Idioma / 語言", list(TRADUCCIONES.keys()))
     t = TRADUCCIONES[idioma_app]
@@ -78,7 +84,7 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-# 4. CARGA DE PROMPT Y CONFIGURACIÓN DE MODELO
+# --- 5. CONFIGURACIÓN DE GEMINI API ---
 @st.cache_data
 def load_prompt(url):
     try:
@@ -92,14 +98,14 @@ sys_instruction = load_prompt(PROMPT_URL)
 if "GEMINI_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
     model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash-lite-preview-02-05", #
+        model_name="gemini-2.0-flash-lite-preview-02-05",
         system_instruction=sys_instruction
     )
 else:
     st.error("⚠️ API KEY missing in Secrets.")
     st.stop()
 
-# 5. DISEÑO DE INTERFAZ
+# --- 6. DISEÑO DE PANTALLA DIVIDIDA ---
 col_txt, col_chat = st.columns([1, 1], gap="large")
 
 with col_txt:
@@ -121,26 +127,26 @@ with col_chat:
             with st.chat_message(m["role"]): st.markdown(m["content"])
 
     if prompt := st.chat_input(t["input_placeholder"]):
-        # 1. Añadimos el mensaje del usuario al estado
         st.session_state.messages.append({"role": "user", "content": prompt})
-        
-        # 2. Mostramos inmediatamente el mensaje en la UI
         with chat_container:
             with st.chat_message("user"): st.markdown(prompt)
             
             with st.chat_message("assistant"):
-                # --- CORRECCIÓN CRÍTICA: MAPEO DE ROLES ---
-                # Gemini no acepta "assistant", solo "model".
+                # --- LÓGICA DE PODA (SLIDING WINDOW) ---
+                # Enviamos solo los últimos 6 mensajes para ahorrar tokens y cuota.
+                LIMITE_MEMORIA = 6 
+                mensajes_recientes = st.session_state.messages[-LIMITE_MEMORIA:]
+                
                 history_for_api = []
-                for m in st.session_state.messages[:-1]:
+                for m in mensajes_recientes[:-1]: # Excluimos el actual para send_message
                     api_role = "model" if m["role"] == "assistant" else "user"
                     history_for_api.append({"role": api_role, "parts": [m["content"]]})
                 
-                # Preparamos la consulta con refuerzo de contexto
+                # Inyección de mandato contextual
                 full_query = (
                     f"[Language: {idioma_app}] "
                     f"[MANDATO: Ignora español para homógrafos. Solo Latín de Virgilio. "
-                    f"Foco: Significado filológico contextual. Sé breve.] "
+                    f"Foco: Significado filológico contextual. Sé breve y directo.] "
                     f"{prompt}"
                 )
                 
@@ -149,13 +155,11 @@ with col_chat:
                     with st.spinner(t["spinner"]):
                         response = chat.send_message(full_query)
                         st.markdown(response.text)
-                        # Guardamos con el rol de Streamlit
                         st.session_state.messages.append({"role": "assistant", "content": response.text})
                 except Exception as e:
-                    st.error(f"{t['error_api']} (Detalle: {str(e)})")
-        
-        # Rerun controlado para refrescar el contenedor
+                    st.error(f"{t['error_api']} ({str(e)})")
         st.rerun()
 
     st.divider()
-    st.link_button(t["cta_btn"], "https://docs.google.com/forms/d/...", use_container_width=True, type="primary")
+    form_url = "https://docs.google.com/forms/d/e/1FAIpQLSdcEGs0k3eO1A3yDwwlRPZxM7RPpOPVD121J6GMUwAgbtbQ5w/viewform?usp=header"
+    st.link_button(t["cta_btn"], form_url, use_container_width=True, type="primary")
