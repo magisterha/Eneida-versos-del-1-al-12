@@ -1,6 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 import requests
+# --- NUEVA IMPORTACIÓN PARA LA BASE DE DATOS ---
+from streamlit_gsheets import GSheetsConnection
 
 # --- 1. CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(
@@ -84,6 +86,23 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
+    # --- NUEVO: DIAGNÓSTICO DE BASE DE DATOS EN SIDEBAR ---
+    with st.expander("🕵️‍♂️ Estado de Base de Datos"):
+        try:
+            # Creamos la conexión
+            conn = st.connection("gsheets", type=GSheetsConnection)
+            
+            # ⚠️ ¡CAMBIA ESTA LÍNEA POR TU ENLACE! ⚠️
+            url_hoja = "https://docs.google.com/spreadsheets/d/TU_URL_AQUI/edit"
+            
+            # Leemos los datos
+            df = conn.read(spreadsheet=url_hoja, usecols=[0,1]) # Leemos solo las 2 primeras columnas
+            st.success("✅ Conectado")
+            st.caption(f"Filas encontradas: {len(df)}")
+        except Exception as e:
+            st.error("❌ Desconectado")
+            st.caption(str(e))
+
 # --- 5. CONFIGURACIÓN DE GEMINI API ---
 @st.cache_data
 def load_prompt(url):
@@ -133,12 +152,11 @@ with col_chat:
             
             with st.chat_message("assistant"):
                 # --- LÓGICA DE PODA (SLIDING WINDOW) ---
-                # Enviamos solo los últimos 6 mensajes para ahorrar tokens y cuota.
                 LIMITE_MEMORIA = 6 
                 mensajes_recientes = st.session_state.messages[-LIMITE_MEMORIA:]
                 
                 history_for_api = []
-                for m in mensajes_recientes[:-1]: # Excluimos el actual para send_message
+                for m in mensajes_recientes[:-1]: 
                     api_role = "model" if m["role"] == "assistant" else "user"
                     history_for_api.append({"role": api_role, "parts": [m["content"]]})
                 
