@@ -79,34 +79,39 @@ TRADUCCIONES = {
 def buscar_en_base_datos(pregunta_usuario):
     """Busca si la pregunta ya existe en la hoja de cálculo."""
     try:
-        # 1. Conectamos
         conn = st.connection("gsheets", type=GSheetsConnection)
-        # 2. Leemos la hoja (siempre fresca)
-        df = conn.read(spreadsheet=URL_HOJA_CALCULO, usecols=[0, 1])
         
-        # 3. Limpiamos datos para comparar (todo a minúsculas)
+        # ⚠️ CAMBIO CLAVE 1: ttl=0 obliga a leer la versión MÁS RECIENTE siempre
+        df = conn.read(spreadsheet=URL_HOJA_CALCULO, usecols=[0, 1], ttl=0)
+        
         pregunta_usuario = pregunta_usuario.lower().strip()
         
-        # 4. Buscamos coincidencia
-        # Iteramos por las filas buscando si la palabra clave está en la pregunta guardada
+        # Iteramos buscando coincidencias inteligentes
         for index, row in df.iterrows():
-            pregunta_db = str(row.iloc[0]).lower()
+            # Nos aseguramos de que sean texto (str) para evitar errores
+            pregunta_db = str(row.iloc[0]).lower().strip()
             respuesta_db = str(row.iloc[1])
             
-            # Lógica simple: Si lo que escribe el usuario coincide mucho con lo guardado
-            if pregunta_usuario == pregunta_db or pregunta_usuario in pregunta_db:
+            # Si la celda está vacía, saltamos
+            if not pregunta_db: continue
+            
+            # ⚠️ CAMBIO CLAVE 2: Lógica invertida y más flexible
+            # ¿La palabra clave de la DB está dentro de lo que preguntó el usuario?
+            # Ej: Si DB tiene "cano" y usuario dice "¿Qué es cano?", esto dará True.
+            if pregunta_db in pregunta_usuario:
                 return respuesta_db
+                
         return None
     except Exception as e:
-        # Si falla la conexión, no rompemos la app, solo devolvemos None (y usaremos Gemini)
-        print(f"Error DB: {e}") 
+        st.error(f"Error leyendo DB: {e}")
         return None
 
 def guardar_nueva_entrada(pregunta, respuesta):
-    """Guarda lo que la IA generó para no tener que volver a preguntarlo."""
+    """Guarda lo que la IA generó."""
     try:
         conn = st.connection("gsheets", type=GSheetsConnection)
-        df = conn.read(spreadsheet=URL_HOJA_CALCULO, usecols=[0, 1])
+        # Leemos sin caché para no machacar datos antiguos
+        df = conn.read(spreadsheet=URL_HOJA_CALCULO, usecols=[0, 1], ttl=0)
         
         # Creamos la nueva fila
         nueva_fila = pd.DataFrame([[pregunta, respuesta]], columns=df.columns)
@@ -116,8 +121,10 @@ def guardar_nueva_entrada(pregunta, respuesta):
         
         # Subimos a la nube
         conn.update(spreadsheet=URL_HOJA_CALCULO, data=df_actualizado)
+        
     except Exception as e:
-        st.error(f"Error guardando memoria: {e}")
+        # Aquí verás si es un problema de permisos
+        st.error(f"❌ Error al guardar. ¿El robot es EDITOR de la hoja? Detalles: {e}")
 
 # --- 4. CSS Y DISEÑO ---
 st.markdown("""
