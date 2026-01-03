@@ -93,7 +93,7 @@ with st.sidebar:
             conn = st.connection("gsheets", type=GSheetsConnection)
             
             # ⚠️ ¡CAMBIA ESTA LÍNEA POR TU ENLACE! ⚠️
-            url_hoja = "https://docs.google.com/spreadsheets/d/TU_URL_AQUI/edit"
+            url_hoja = "https://docs.google.com/spreadsheets/d/1022thHT1sGmNBhYdty1lXLELSK6MYQWc1GaMILlzZtQ/edit?usp=sharing"
             
             # Leemos los datos
             df = conn.read(spreadsheet=url_hoja, usecols=[0,1]) # Leemos solo las 2 primeras columnas
