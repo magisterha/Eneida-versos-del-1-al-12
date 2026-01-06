@@ -23,7 +23,7 @@ litora, multum ille et terris iactatus et alto,
 
 vi superum, saevae memorem Iunonis ob iram,
 
-5  multa quoque et bello passus, dum conderet urbem
+multa quoque et bello passus, dum conderet urbem
 
 inferretque deos Latio, genus unde Latinum
 
@@ -33,7 +33,7 @@ Musa, mihi causas memora, quo numine laeso
 
 quidve dolens regina deum tot volvere casus
 
-10 insignem pietate virum, tot adire labores
+insignem pietate virum, tot adire labores
 
 impulerit. Tantaene animis caelestibus irae?
 
@@ -43,7 +43,7 @@ Karthago, Italiam contra Tiberinaque longe
 
 ostia, dives opum studiisque asperrima belli;
 
-15 quam Iuno fertur terris magis omnibus unam
+quam Iuno fertur terris magis omnibus unam
 
 posthabita coluisse Samo: | hic illius arma,
 
@@ -53,7 +53,7 @@ si qua fata sinant, iam tum tenditque fovetque.
 
 Progeniem sed enim Troiano sanguine duci
 
-20 audierat, Tyrias olim quae verteret arces;
+audierat, Tyrias olim quae verteret arces;
 
 hinc populum late regem belloque superbum
 
@@ -63,7 +63,7 @@ Id metuens veterisque memor Saturnia belli,
 
 prima quod ad Troiam pro caris gesserat Argis:
 
-25 necdum etiam causae irarum saevique dolores
+necdum etiam causae irarum saevique dolores
 
 exciderant animo; manet alta mente repostum
 
@@ -73,7 +73,7 @@ et genus invisum et rapti Ganymedis honores:
 
 his accensa super iactatos aequore toto
 
-30 Troas, reliquias Danaum atque immitis Achilli,
+Troas, reliquias Danaum atque immitis Achilli,
 
 arcebat longe Latio, multosque per annos
 
@@ -83,7 +83,7 @@ Tantae molis erat Romanam condere gentem.
 
 Vix e conspectu Siculae telluris in altum
 
-35 vela dabant laeti et spumas salis aere ruebant,
+vela dabant laeti et spumas salis aere ruebant,
 
 cum Iuno aeternum servans sub pectore volnus
 
@@ -93,7 +93,7 @@ nec posse Italia Teucrorum avertere regem?
 
 Quippe vetor fatis. Pallasne exurere classem
 
-40 Argivum atque ipsos potuit submergere ponto
+Argivum atque ipsos potuit submergere ponto
 
 unius ob noxam et furias Aiacis Oilei?
 
@@ -103,7 +103,7 @@ disiecitque rates evertitque aequora ventis,
 
 illum exspirantem transfixo pectore flammas
 
-45 turbine corripuit scopuloque infixit acuto;
+turbine corripuit scopuloque infixit acuto;
 
 ast ego, quae divom incedo regina Iovisque
 
@@ -113,7 +113,7 @@ bella gero. Et quisquam numen Iunonis adorat
 
 praeterea aut supplex aris imponet honorem?"
 
-50 Talia flammato secum dea corde volutans
+Talia flammato secum dea corde volutans
 
 nimborum in patriam, loca feta furentibus Austris,
 
@@ -123,7 +123,7 @@ luctantis ventos tempestatesque sonoras
 
 imperio premit ac vinclis et carcere frenat.
 
-55Illi indignantes magno cum murmure montis
+Illi indignantes magno cum murmure montis
 
 circum claustra fremunt; celsa sedet Aeolus arce
 
@@ -133,7 +133,7 @@ Ni faciat, maria ac terras caelumque profundum
 
 quippe ferant rapidi secum verrantque per auras:
 
-60sed pater omnipotens speluncis abdidit atris
+sed pater omnipotens speluncis abdidit atris
 
 hoc metuens molemque et montis insuper altos
 
@@ -143,7 +143,7 @@ et premere et laxas sciret dare iussus habenas.
 
 Ad quem tum Iuno supplex his vocibus usa est:
 
-65"Aeole (namque tibi divom pater atque hominum rex
+"Aeole (namque tibi divom pater atque hominum rex
 
 et mulcere dedit fluctus et tollere vento),
 
@@ -153,7 +153,7 @@ Ilium et Italiam portans victosque penatis:
 
 incute vim ventis submersasque obrue puppes,
 
-70aut age diversos et dissice corpora ponto.
+aut age diversos et dissice corpora ponto.
 
 Sunt mihi bis septem praestanti corpore Nymphae,
 
@@ -163,7 +163,7 @@ conubio iungam stabili propriamque dicabo,
 
 omnis ut tecum meritis pro talibus annos
 
-75exigat et pulchra faciat te prole parentem".
+exigat et pulchra faciat te prole parentem".
 
 Aeolus haec contra: "Tuus, o regina, quid optes,
 
@@ -173,7 +173,7 @@ Tu mihi quodcumque hoc regni, tu sceptra Iovemque
 
 concilias, tu das epulis accumbere divom
 
-80nimborumque facis tempestatumque potentem".
+nimborumque facis tempestatumque potentem".
 
 Haec ubi dicta, cavum conversa cuspide montem
 
@@ -183,7 +183,7 @@ qua data porta, ruunt et terras turbine perflant.
 
 Incubuere mari totumque a sedibus imis
 
-85una Eurusque Notusque ruunt creberque procellis
+una Eurusque Notusque ruunt creberque procellis
 
 Africus et vastos volvunt ad litora fluctus.
 
@@ -193,7 +193,7 @@ Eripiunt subito nubes caelumque diemque
 
 Teucrorum ex oculis; ponto nox incubat atra;
 
-90intonvere poli et crebris micat ignibus aether
+intonvere poli et crebris micat ignibus aether
 
 praesentemque viris intentant omnia mortem.
 
@@ -203,7 +203,7 @@ ingemit et duplicis tendens ad sidera palmas
 
 talia voce refert: "O terque quaterque beati,
 
-95quis ante ora patrum Troiae sub moenibus altis
+quis ante ora patrum Troiae sub moenibus altis
 
 contigit oppetere! o Danaum fortissime gentis
 
@@ -213,7 +213,7 @@ non potuisse tuaque animam hanc effundere dextra,
 
 saevus ubi Aeacidae telo iacet Hector, ubi ingens
 
-100 Sarpedon, ubi tot Simois correpta sub undis
+Sarpedon, ubi tot Simois correpta sub undis
 
 scuta virum galeasque et fortia corpora volvit!"
 
@@ -223,7 +223,7 @@ velum adversa ferit fluctusque ad sidera tollit.
 
 Franguntur remi; tum prora avertit et undis
 
-105 dat latus: insequitur cumulo praeruptus aquae mons.
+dat latus: insequitur cumulo praeruptus aquae mons.
 
 Hi summo in fluctu pendent; his unda dehiscens
 
@@ -233,7 +233,7 @@ Tris Notus abreptas in saxa latentia torquet
 
 (saxa vocant Itali, mediis quae in fluctibus, Aras,
 
-110dorsum immane mari summo), tris Eurus ab alto
+dorsum immane mari summo), tris Eurus ab alto
 
 in brevia et Syrtis urguet (miserabile visu)
 
@@ -243,7 +243,7 @@ Unam, quae Lycios fidumque vehebat Oronten,
 
 ipsius ante oculos ingens a vertice pontus
 
-115 in puppim ferit: excutitur pronusque magister
+in puppim ferit: excutitur pronusque magister
 
 volvitur in caput; ast illam ter fluctus ibidem
 
@@ -253,7 +253,7 @@ Apparent rari nantes in gurgite vasto,
 
 arma virum tabulaeque et Troia gaza per undas.
 
-120 Iam validam Ilionei navem, iam fortis Achatae
+Iam validam Ilionei navem, iam fortis Achatae
 
 et qua vectus Abas et qua grandaevos Aletes,
 
@@ -263,7 +263,7 @@ accipiunt inimicum imbrem rimisque fatiscunt.
 
 Interea magno misceri murmure pontum
 
-125 emissamque hiemem sensit Neptunus et imis
+emissamque hiemem sensit Neptunus et imis
 
 stagna refusa vadis, graviter commotus, et alto
 
@@ -273,7 +273,7 @@ Disiectam Aeneae toto videt aequore classem,
 
 fluctibus oppressos Troas caelique ruina.
 
-130 Nec latuere doli fratrem Iunonis et irae.
+Nec latuere doli fratrem Iunonis et irae.
 
 Eurum ad se Zephyrumque vocat, dehinc talia fatur:
 
@@ -283,7 +283,7 @@ iam caelum terramque meo sine numine, venti,
 
 miscere et tantas audetis tollere moles?
 
-135 Quos ego! sed motos praestat componere fluctus.
+Quos ego! sed motos praestat componere fluctus.
 
 Post mihi non simili poena commissa luetis.
 
@@ -293,7 +293,7 @@ non illi imperium pelagi saevumque tridentem,
 
 sed mihi sorte datum. Tenet ille immania saxa,
 
-140 vestras, Eure, domos; illa se iactet in aula
+vestras, Eure, domos; illa se iactet in aula
 
 Aeolus et clauso ventorum carcere regnet".
 
@@ -303,7 +303,7 @@ collectasque fugat nubes solemque reducit.
 
 Cymothoë simul et Triton adnixus acuto
 
-145 detrudunt navis scopulo; levat ipse tridenti
+detrudunt navis scopulo; levat ipse tridenti
 
 et vastas aperit Syrtis et temperat aequor
 
@@ -313,7 +313,7 @@ Ac veluti in magno populo cum saepe coorta est
 
 seditio saevitque animis ignobile vulgus,
 
-150 iamque faces et saxa volant, furor arma ministrat:
+iamque faces et saxa volant, furor arma ministrat:
 
 tum pietate gravem ac meritis si forte virum quem
 
@@ -323,7 +323,7 @@ ille regit dictis animos et pectora mulcet:
 
 sic cunctus pelagi cecidit fragor, aequora postquam
 
-155 prospiciens genitor caeloque invectus aperto
+prospiciens genitor caeloque invectus aperto
 
 flectit equos curruque volans dat lora secundo.
 
@@ -333,7 +333,7 @@ contendunt petere et Libyae vertuntur ad oras.
 
 Est in secessu longo locus: insula portum
 
-160 efficit obiectu laterum, quibus omnis ab alto
+efficit obiectu laterum, quibus omnis ab alto
 
 frangitur inque sinus scindit sese unda reductos.
 
@@ -343,7 +343,7 @@ in caelum scopuli, quorum sub vertice late
 
 aequora tuta silent; tum silvis scaena coruscis
 
-165 desuper horrentique atrum nemus imminet umbra.
+desuper horrentique atrum nemus imminet umbra.
 
 Fronte sub adversa scopulis pendentibus antrum:
 
@@ -353,7 +353,7 @@ Nympharum domus. Hic fessas non vincula navis
 
 ulla tenent, unco non alligat ancora morsu.
 
-170 Huc septem Aeneas collectis navibus omni
+Huc septem Aeneas collectis navibus omni
 
 ex numero subit, ac magno telluris amore
 
@@ -363,7 +363,7 @@ et sale tabentis artus in litore ponunt.
 
 Ac primum silici scintillam excudit Achates
 
-175 succepitque ignem foliis atque arida circum
+succepitque ignem foliis atque arida circum
 
 nutrimenta dedit rapuitque in fomite flammam.
 
@@ -373,7 +373,7 @@ expediunt fessi rerum frugesque receptas
 
 et torrere parant flammis et frangere saxo.
 
-180 Aeneas scopulum interea conscendit et omnem
+Aeneas scopulum interea conscendit et omnem
 
 prospectum late pelago petit, Anthea si quem
 
@@ -383,7 +383,7 @@ aut Capyn aut celsis in puppibus arma Caici.
 
 Navem in conspectu nullam, tris litore cervos
 
-185 prospicit errantis; hos tota armenta secuntur
+prospicit errantis; hos tota armenta secuntur
 
 a tergo et longum per vallis pascitur agmen.
 
@@ -393,7 +393,7 @@ corripuit fidus quae tela gerebat Achates,
 
 ductoresque ipsos primum, capita alta ferentis
 
-190 cornibus arboreis, sternit, tum volgus et omnem
+cornibus arboreis, sternit, tum volgus et omnem
 
 miscet agens telis nemora inter frondea turbam;
 
@@ -403,7 +403,7 @@ corpora fundat humi et numerum cum navibus aequet;
 
 hinc portum petit et socios partitur in omnis.
 
-195 Vina bonus quae deinde cadis onerarat Acestes
+Vina bonus quae deinde cadis onerarat Acestes
 
 litore Trinacrio dederatque abeuntibus, heros
 
@@ -413,7 +413,7 @@ dividit et dictis maerentia pectora mulcet:
 
 o passi graviora, dabit deus hic quoque finem.
 
-200 Vos et Scyllaeam rabiem penitusque sonantis
+ Vos et Scyllaeam rabiem penitusque sonantis
 
 accestis scopulos, vos et Cyclopia saxa
 
@@ -423,7 +423,7 @@ mittite; forsan et haec olim meminisse iuvabit.
 
 Per varios casus per tot discrimina rerum
 
-205 tendimus in Latium, sedes ubi fata quietas
+tendimus in Latium, sedes ubi fata quietas
 
 ostendunt; illic fas regna resurgere Troiae.
 
@@ -433,7 +433,7 @@ Talia voce refert curisque ingentibus aeger
 
 spem voltu simulat, premit altum corde dolorem.
 
-210 Illi se praedae accingunt dapibusque futuris:
+Illi se praedae accingunt dapibusque futuris:
 
 tergora diripiunt costis et viscera nudant;
 
@@ -443,7 +443,7 @@ litore aëna locant alii flammasque ministrant.
 
 Tum victu revocant viris fusique per herbam
 
-215 implentur veteris Bacchi pinguisque ferinae.
+implentur veteris Bacchi pinguisque ferinae.
 
 Postquam exempta fames epulis mensaeque remotae,
 
@@ -453,7 +453,7 @@ spemque metumque inter dubii, seu vivere credant
 
 sive extrema pati nec iam exaudire vocatos.
 
-220 Praecipue pius Aeneas nunc acris Oronti,
+ Praecipue pius Aeneas nunc acris Oronti,
 
 nunc Amyci casum gemit et crudelia secum
 
@@ -463,7 +463,7 @@ Et iam finis erat, cum Iuppiter aethere summo
 
 despiciens mare velivolum terrasque iacentis
 
-225 litoraque et latos populos, sic vertice caeli
+litoraque et latos populos, sic vertice caeli
 
 constitit et Libyae defixit lumina regnis.
 
@@ -473,7 +473,7 @@ tristior et lacrimis oculos suffusa nitentis
 
 adloquitur Venus: "O qui res hominumque deumque
 
-230 aeternis regis imperiis et fulmine terres,
+ aeternis regis imperiis et fulmine terres,
 
 quid meus Aeneas in te committere tantum,
 
@@ -483,7 +483,7 @@ cunctus ob Italiam terrarum clauditur orbis?
 
 Certe hinc Romanos olim volventibus annis,
 
-235 hinc fore ductores revocato a sanguine Teucri,
+hinc fore ductores revocato a sanguine Teucri,
 
 qui mare, qui terras omnis dicione tenerent,
 
@@ -493,7 +493,7 @@ Hoc equidem occasum Troiae tristisque ruinas
 
 solabar fatis contraria fata rependens;
 
-240 nunc eadem fortuna viros tot casibus actos
+nunc eadem fortuna viros tot casibus actos
 
 insequitur. Quem das finem, rex magne, laborum?
 
@@ -503,7 +503,7 @@ Illyricos penetrare sinus atque intuma tutus
 
 regna Liburnorum et fontem superare Timavi,
 
-245 unde per ora novem vasto cum murmure montis
+unde per ora novem vasto cum murmure montis
 
 it mare proruptum et pelago premit arva sonanti.
 
@@ -513,7 +513,7 @@ Teucrorum et genti nomen dedit armaque fixit
 
 Troia, nunc placida compostus pace quiescit:
 
-250 nos, tua progenies, caeli quibus adnuis arcem,
+nos, tua progenies, caeli quibus adnuis arcem,
 
 navibus (infandum!) amissis unius ob iram
 
@@ -523,7 +523,7 @@ Hic pietatis honos? sic nos in sceptra reponis?"
 
 Olli subridens hominum sator atque deorum
 
-255 voltu, quo caelum tempestatesque serenat,
+ voltu, quo caelum tempestatesque serenat,
 
 oscula libavit natae, dehinc talia fatur:
 
@@ -533,7 +533,7 @@ fata tibi; cernes urbem et promissa Lavini
 
 moenia sublimemque feres ad sidera caeli
 
-260 magnanimum Aenean; neque me sententia vertit.
+magnanimum Aenean; neque me sententia vertit.
 
 Hic tibi (fabor enim, quando haec te cura remordet,
 
@@ -543,7 +543,7 @@ bellum ingens geret Italia populosque ferocis
 
 contundet moresque viris et moenia ponet,
 
-265 tertia dum Latio regnantem viderit aestas
+tertia dum Latio regnantem viderit aestas
 
 ternaque transierint Rutulis hiberna subactis.
 
@@ -553,7 +553,7 @@ additur (Ilus erat, dum res stetit Ilia regno),
 
 triginta magnos volvendis mensibus orbis
 
-270 imperio explebit regnumque ab sede Lavini
+imperio explebit regnumque ab sede Lavini
 
 transferet et Longam multa vi muniet Albam.
 
@@ -563,7 +563,7 @@ gente sub Hectorea, donec regina sacerdos
 
 Marte gravis geminam partu dabit Ilia prolem.
 
-275 Inde lupae fulvo nutricis tegmine laetus
+Inde lupae fulvo nutricis tegmine laetus
 
 Romulus excipiet gentem et Mavortia condet
 
@@ -573,7 +573,7 @@ His ego nec metas rerum nec tempora pono,
 
 imperium sine fine dedi. Quin aspera Iuno,
 
-280 quae mare nunc terrasque metu caelumque fatigat,
+quae mare nunc terrasque metu caelumque fatigat,
 
 consilia in melius referet mecumque fovebit
 
