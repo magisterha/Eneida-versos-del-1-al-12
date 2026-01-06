@@ -12,228 +12,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- 2. GESTIÓN DEL TEXTO (CORPUS VERGILIANUM) ---
-# Función para manejar el texto. En lugar de una lista manual, procesamos un bloque.
-def obtener_versos_libro_i():
-    # El texto completo está al final del script en la variable RAW_TEXT
-    # Limpiamos espacios y separamos por saltos de línea
-    lines = [line.strip() for line in ENEIDA_LIBRO_I.strip().split('\n') if line.strip()]
-    return lines
-
-# --- CONFIGURACIÓN DE LA BASE DE DATOS ---
-URL_HOJA_CALCULO = "https://docs.google.com/spreadsheets/d/1022thHT1sGmNBhYdty1lXLELSK6MYQWc1GaMILlzZtQ/edit?usp=sharing"
-
-# --- 3. DICCIONARIO DE TRADUCCIONES ---
-TRADUCCIONES = {
-    "Español": {
-        "sidebar_title": "🏛️ Configuración",
-        "lang_label": "Idioma del Tutor:",
-        "nav_label": "📜 Navegación (Versos):",
-        "reset_btn": "🔄 Reiniciar Consulta",
-        "header": "P. Vergili Maronis: Aeneis (Liber I)",
-        "chat_header": "💬 Consulta Filológica Libre",
-        "welcome": "### 🏛️ ¡Salve!\nSoy tu *grammaticus* digital. Estoy leyendo contigo los versos seleccionados. ¿Qué duda gramatical o mitológica tienes?",
-        "input_placeholder": "Ej: ¿Por qué usa el ablativo aquí? / ¿Quién es Eolo?",
-        "spinner": "Consultando los oráculos...",
-        "cta_btn": "🏛️ Reserva una clase de latín"
-    },
-    "English": {"sidebar_title": "Settings", "lang_label": "Language:", "nav_label": "📜 Navigation (Verses):", "reset_btn": "Reset", "header": "Aeneid (Book I)", "chat_header": "Consultation", "welcome": "### Salve!", "input_placeholder": "Ask...", "spinner": "...", "cta_btn": "Book Class"},
-    "Latine": {"sidebar_title": "Configuratio", "lang_label": "Lingua:", "nav_label": "📜 Navigatio:", "reset_btn": "Iterare", "header": "Aeneis (Liber I)", "chat_header": "Colloquium", "welcome": "### Salve!", "input_placeholder": "Interrogā...", "spinner": "...", "cta_btn": "Schola"},
-    "繁體中文 (Taiwan)": {"sidebar_title": "設定", "lang_label": "語言:", "nav_label": "📜 導航 (詩句):", "reset_btn": "重置", "header": "維吉爾：《埃涅阿斯紀》第一卷", "chat_header": "諮詢", "welcome": "### 您好!", "input_placeholder": "詢問...", "spinner": "...", "cta_btn": "預約"}
-}
-
-# --- 4. FUNCIONES DE MEMORIA (RAG LIGERO) ---
-def buscar_en_base_datos(pregunta_usuario):
-    try:
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        df = conn.read(spreadsheet=URL_HOJA_CALCULO, ttl=0)
-        df = df.dropna(how="all").fillna("")
-        pregunta_usuario = pregunta_usuario.lower().strip()
-        for index, row in df.iterrows():
-            pregunta_db = str(row.iloc[0]).lower().strip()
-            respuesta_db = str(row.iloc[1])
-            if not pregunta_db: continue
-            if (pregunta_usuario in pregunta_db) or (pregunta_db in pregunta_usuario):
-                return respuesta_db
-        return None
-    except: return None
-
-def guardar_nueva_entrada(pregunta, respuesta):
-    try:
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        df = conn.read(spreadsheet=URL_HOJA_CALCULO, ttl=0)
-        df = df.dropna(how="all")
-        nueva_fila = pd.DataFrame([[pregunta, respuesta]], columns=df.columns)
-        df_actualizado = pd.concat([df, nueva_fila], ignore_index=True)
-        conn.update(spreadsheet=URL_HOJA_CALCULO, data=df_actualizado)
-        return True
-    except: return False
-
-# --- 5. ESTILOS CSS (CSS PRO) ---
-st.markdown("""
-    <style>
-    /* Estilo para el texto latino: Fuente Serif clásica y espaciado */
-    .verse-container {
-        background-color: #fcfbf9; /* Color papiro suave */
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #8e44ad;
-        height: 600px;
-        overflow-y: auto; /* Scroll interno */
-    }
-    .verse-line { 
-        font-family: 'Times New Roman', serif; 
-        font-size: 1.2rem; 
-        line-height: 1.6; 
-        color: #2c3e50; 
-        margin-bottom: 4px;
-    }
-    .verse-number {
-        color: #95a5a6;
-        font-size: 0.8rem;
-        margin-right: 10px;
-        user-select: none;
-    }
-    .main-header { color: #8e44ad; font-weight: bold; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;}
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- 6. BARRA LATERAL (SIDEBAR) ---
-with st.sidebar:
-    idioma_app = st.selectbox("Language / Idioma / 語言", list(TRADUCCIONES.keys()))
-    t = TRADUCCIONES[idioma_app]
-    
-    st.title(t["sidebar_title"])
-    st.divider()
-    
-    # --- LÓGICA DE PAGINACIÓN ---
-    # Cargamos el texto completo
-    todos_los_versos = obtener_versos_libro_i()
-    total_versos = len(todos_los_versos)
-    VERSOS_POR_PAGINA = 30 # Muestra 30 versos por bloque para no saturar
-    
-    # Slider para seleccionar el rango
-    st.markdown(f"**{t['nav_label']}**")
-    pagina = st.slider("Selectio", 1, total_versos, 1, step=VERSOS_POR_PAGINA)
-    
-    inicio = pagina - 1
-    fin = min(inicio + VERSOS_POR_PAGINA, total_versos)
-    versos_visibles = todos_los_versos[inicio:fin]
-    rango_actual = f"Versus {inicio + 1} - {fin}"
-    
-    st.caption(f"📍 {rango_actual} / {total_versos}")
-    
-    st.divider()
-    if st.button(t["reset_btn"]):
-        st.session_state.messages = []
-        st.cache_data.clear()
-        st.rerun()
-
-# --- 7. CONFIGURACIÓN GEMINI ---
-@st.cache_data
-def load_prompt(url):
-    try:
-        r = requests.get(url)
-        return r.text if r.status_code == 200 else "Act as an expert Latin Philologist specializing in Virgil."
-    except: return "Act as an expert Latin Philologist specializing in Virgil."
-
-PROMPT_URL = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/prompt_maestro.txt"
-base_instruction = load_prompt(PROMPT_URL)
-
-# Aquí inyectamos el contexto de los versos que el usuario está mirando
-contexto_actual = "\n".join(versos_visibles)
-sys_instruction = f"""
-{base_instruction}
-CONTEXTO ACTUAL DEL USUARIO (El usuario está leyendo estos versos específicos ahora mismo):
----
-{contexto_actual}
----
-Si el usuario pregunta sobre 'este verso' o 'esta palabra', refiérete a este fragmento.
-"""
-
-if "GEMINI_API_KEY" in st.secrets:
-    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-    model = genai.GenerativeModel(model_name="gemini-2.0-flash-lite-preview-02-05", system_instruction=sys_instruction)
-else:
-    st.warning("⚠️ API KEY missing. AI features disabled.")
-    model = None
-
-# --- 8. INTERFAZ PRINCIPAL ---
-col_txt, col_chat = st.columns([6, 4], gap="medium") # 60% texto, 40% chat
-
-with col_txt:
-    st.markdown(f"<h2 class='main-header'>{t['header']} <span style='font-size:0.6em; color:gray'>({rango_actual})</span></h2>", unsafe_allow_html=True)
-    
-    # Contenedor del texto con scroll
-    texto_html = '<div class="verse-container">'
-    for i, v in enumerate(versos_visibles):
-        num_verso = inicio + i + 1
-        # Formato: Número en gris + Verso
-        texto_html += f'<div class="verse-line"><span class="verse-number">{num_verso}</span>{v}</div>'
-    texto_html += '</div>'
-    
-    st.markdown(texto_html, unsafe_allow_html=True)
-
-with col_chat:
-    st.subheader(t["chat_header"])
-    chat_container = st.container(height=600, border=True)
-
-    if "messages" not in st.session_state or len(st.session_state.messages) == 0:
-        st.session_state.messages = [{"role": "assistant", "content": t["welcome"]}]
-
-    with chat_container:
-        for m in st.session_state.messages:
-            with st.chat_message(m["role"]): st.markdown(m["content"])
-
-    if prompt := st.chat_input(t["input_placeholder"]):
-        if model is None:
-            st.error("No API Key configured")
-        else:
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with chat_container:
-                with st.chat_message("user"): st.markdown(prompt)
-                
-                with st.chat_message("assistant"):
-                    # 1. BUSCAR EN DB
-                    respuesta_db = buscar_en_base_datos(prompt)
-                    
-                    if respuesta_db:
-                        st.success("📚 Memoria Externa")
-                        st.markdown(respuesta_db)
-                        st.session_state.messages.append({"role": "assistant", "content": respuesta_db})
-                    else:
-                        # 2. CONSULTAR IA
-                        try:
-                            # Enviamos historial breve
-                            history = [{"role": "model" if m["role"]=="assistant" else "user", "parts": [m["content"]]} 
-                                       for m in st.session_state.messages[-6:-1]]
-                            
-                            # Prompt aumentado con idioma
-                            full_query = f"[User Language: {idioma_app}] [Intention: Philological/Grammatical Analysis] {prompt}"
-                            
-                            chat = model.start_chat(history=history)
-                            with st.spinner(t["spinner"]):
-                                response = chat.send_message(full_query)
-                                texto_ia = response.text
-                                st.markdown(texto_ia)
-                                st.session_state.messages.append({"role": "assistant", "content": texto_ia})
-                                
-                                # Guardar en segundo plano
-                                guardar_nueva_entrada(prompt, texto_ia)
-                        except Exception as e:
-                            st.error(f"Error: {str(e)}")
-            st.rerun()
-
-    st.divider()
-    form_url = "https://docs.google.com/forms/d/tu-form-id"
-    st.link_button(t["cta_btn"], form_url, use_container_width=True, type="primary")
-
-# --- 9. CORPUS: ENEIDA LIBRO I (TEXTO COMPLETO) ---
-# Se coloca al final para no ensuciar la lógica.
-# He incluido los primeros 50 versos y los últimos como demostración.
-# Para el libro ENTERO, simplemente pega el texto restante dentro de las comillas.
+# --- 2. CORPUS: ENEIDA LIBRO I (TEXTO COMPLETO) ---
+# MOVIDO AL PRINCIPIO PARA EVITAR NAME_ERROR
 ENEIDA_LIBRO_I = """
-
 Arma virumque cano, Troiae qui primus ab oris
     
  Italiam fato profugus Laviniaque venit
@@ -1746,3 +1527,219 @@ insidias" inquit, "Danaum casusque tuorum
 
 omnibus errantem terris et fluctibus aestas".
 """
+
+# --- 2. GESTIÓN DEL TEXTO (CORPUS VERGILIANUM) ---
+# Función para manejar el texto. En lugar de una lista manual, procesamos un bloque.
+def obtener_versos_libro_i():
+    # El texto completo está al inicio del script en la variable ENEIDA_LIBRO_I
+    # Limpiamos espacios y separamos por saltos de línea
+    lines = [line.strip() for line in ENEIDA_LIBRO_I.strip().split('\n') if line.strip()]
+    return lines
+
+# --- CONFIGURACIÓN DE LA BASE DE DATOS ---
+URL_HOJA_CALCULO = "https://docs.google.com/spreadsheets/d/1022thHT1sGmNBhYdty1lXLELSK6MYQWc1GaMILlzZtQ/edit?usp=sharing"
+
+# --- 3. DICCIONARIO DE TRADUCCIONES ---
+TRADUCCIONES = {
+    "Español": {
+        "sidebar_title": "🏛️ Configuración",
+        "lang_label": "Idioma del Tutor:",
+        "nav_label": "📜 Navegación (Versos):",
+        "reset_btn": "🔄 Reiniciar Consulta",
+        "header": "P. Vergili Maronis: Aeneis (Liber I)",
+        "chat_header": "💬 Consulta Filológica Libre",
+        "welcome": "### 🏛️ ¡Salve!\nSoy tu *grammaticus* digital. Estoy leyendo contigo los versos seleccionados. ¿Qué duda gramatical o mitológica tienes?",
+        "input_placeholder": "Ej: ¿Por qué usa el ablativo aquí? / ¿Quién es Eolo?",
+        "spinner": "Consultando los oráculos...",
+        "cta_btn": "🏛️ Reserva una clase de latín"
+    },
+    "English": {"sidebar_title": "Settings", "lang_label": "Language:", "nav_label": "📜 Navigation (Verses):", "reset_btn": "Reset", "header": "Aeneid (Book I)", "chat_header": "Consultation", "welcome": "### Salve!", "input_placeholder": "Ask...", "spinner": "...", "cta_btn": "Book Class"},
+    "Latine": {"sidebar_title": "Configuratio", "lang_label": "Lingua:", "nav_label": "📜 Navigatio:", "reset_btn": "Iterare", "header": "Aeneis (Liber I)", "chat_header": "Colloquium", "welcome": "### Salve!", "input_placeholder": "Interrogā...", "spinner": "...", "cta_btn": "Schola"},
+    "繁體中文 (Taiwan)": {"sidebar_title": "設定", "lang_label": "語言:", "nav_label": "📜 導航 (詩句):", "reset_btn": "重置", "header": "維吉爾：《埃涅阿斯紀》第一卷", "chat_header": "諮詢", "welcome": "### 您好!", "input_placeholder": "詢問...", "spinner": "...", "cta_btn": "預約"}
+}
+
+# --- 4. FUNCIONES DE MEMORIA (RAG LIGERO) ---
+def buscar_en_base_datos(pregunta_usuario):
+    try:
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        df = conn.read(spreadsheet=URL_HOJA_CALCULO, ttl=0)
+        df = df.dropna(how="all").fillna("")
+        pregunta_usuario = pregunta_usuario.lower().strip()
+        for index, row in df.iterrows():
+            pregunta_db = str(row.iloc[0]).lower().strip()
+            respuesta_db = str(row.iloc[1])
+            if not pregunta_db: continue
+            if (pregunta_usuario in pregunta_db) or (pregunta_db in pregunta_usuario):
+                return respuesta_db
+        return None
+    except: return None
+
+def guardar_nueva_entrada(pregunta, respuesta):
+    try:
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        df = conn.read(spreadsheet=URL_HOJA_CALCULO, ttl=0)
+        df = df.dropna(how="all")
+        nueva_fila = pd.DataFrame([[pregunta, respuesta]], columns=df.columns)
+        df_actualizado = pd.concat([df, nueva_fila], ignore_index=True)
+        conn.update(spreadsheet=URL_HOJA_CALCULO, data=df_actualizado)
+        return True
+    except: return False
+
+# --- 5. ESTILOS CSS (CSS PRO) ---
+st.markdown("""
+    <style>
+    /* Estilo para el texto latino: Fuente Serif clásica y espaciado */
+    .verse-container {
+        background-color: #fcfbf9; /* Color papiro suave */
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 5px solid #8e44ad;
+        height: 600px;
+        overflow-y: auto; /* Scroll interno */
+    }
+    .verse-line { 
+        font-family: 'Times New Roman', serif; 
+        font-size: 1.2rem; 
+        line-height: 1.6; 
+        color: #2c3e50; 
+        margin-bottom: 4px;
+    }
+    .verse-number {
+        color: #95a5a6;
+        font-size: 0.8rem;
+        margin-right: 10px;
+        user-select: none;
+    }
+    .main-header { color: #8e44ad; font-weight: bold; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px;}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 6. BARRA LATERAL (SIDEBAR) ---
+with st.sidebar:
+    idioma_app = st.selectbox("Language / Idioma / 語言", list(TRADUCCIONES.keys()))
+    t = TRADUCCIONES[idioma_app]
+    
+    st.title(t["sidebar_title"])
+    st.divider()
+    
+    # --- LÓGICA DE PAGINACIÓN ---
+    # Cargamos el texto completo
+    todos_los_versos = obtener_versos_libro_i()
+    total_versos = len(todos_los_versos)
+    VERSOS_POR_PAGINA = 30 # Muestra 30 versos por bloque para no saturar
+    
+    # Slider para seleccionar el rango
+    st.markdown(f"**{t['nav_label']}**")
+    pagina = st.slider("Selectio", 1, total_versos, 1, step=VERSOS_POR_PAGINA)
+    
+    inicio = pagina - 1
+    fin = min(inicio + VERSOS_POR_PAGINA, total_versos)
+    versos_visibles = todos_los_versos[inicio:fin]
+    rango_actual = f"Versus {inicio + 1} - {fin}"
+    
+    st.caption(f"📍 {rango_actual} / {total_versos}")
+    
+    st.divider()
+    if st.button(t["reset_btn"]):
+        st.session_state.messages = []
+        st.cache_data.clear()
+        st.rerun()
+
+# --- 7. CONFIGURACIÓN GEMINI ---
+@st.cache_data
+def load_prompt(url):
+    try:
+        r = requests.get(url)
+        return r.text if r.status_code == 200 else "Act as an expert Latin Philologist specializing in Virgil."
+    except: return "Act as an expert Latin Philologist specializing in Virgil."
+
+PROMPT_URL = "https://raw.githubusercontent.com/tu_usuario/tu_repo/main/prompt_maestro.txt"
+base_instruction = load_prompt(PROMPT_URL)
+
+# Aquí inyectamos el contexto de los versos que el usuario está mirando
+contexto_actual = "\n".join(versos_visibles)
+sys_instruction = f"""
+{base_instruction}
+CONTEXTO ACTUAL DEL USUARIO (El usuario está leyendo estos versos específicos ahora mismo):
+---
+{contexto_actual}
+---
+Si el usuario pregunta sobre 'este verso' o 'esta palabra', refiérete a este fragmento.
+"""
+
+if "GEMINI_API_KEY" in st.secrets:
+    genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+    model = genai.GenerativeModel(model_name="gemini-2.0-flash-lite-preview-02-05", system_instruction=sys_instruction)
+else:
+    st.warning("⚠️ API KEY missing. AI features disabled.")
+    model = None
+
+# --- 8. INTERFAZ PRINCIPAL ---
+col_txt, col_chat = st.columns([6, 4], gap="medium") # 60% texto, 40% chat
+
+with col_txt:
+    st.markdown(f"<h2 class='main-header'>{t['header']} <span style='font-size:0.6em; color:gray'>({rango_actual})</span></h2>", unsafe_allow_html=True)
+    
+    # Contenedor del texto con scroll
+    texto_html = '<div class="verse-container">'
+    for i, v in enumerate(versos_visibles):
+        num_verso = inicio + i + 1
+        # Formato: Número en gris + Verso
+        texto_html += f'<div class="verse-line"><span class="verse-number">{num_verso}</span>{v}</div>'
+    texto_html += '</div>'
+    
+    st.markdown(texto_html, unsafe_allow_html=True)
+
+with col_chat:
+    st.subheader(t["chat_header"])
+    chat_container = st.container(height=600, border=True)
+
+    if "messages" not in st.session_state or len(st.session_state.messages) == 0:
+        st.session_state.messages = [{"role": "assistant", "content": t["welcome"]}]
+
+    with chat_container:
+        for m in st.session_state.messages:
+            with st.chat_message(m["role"]): st.markdown(m["content"])
+
+    if prompt := st.chat_input(t["input_placeholder"]):
+        if model is None:
+            st.error("No API Key configured")
+        else:
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with chat_container:
+                with st.chat_message("user"): st.markdown(prompt)
+                
+                with st.chat_message("assistant"):
+                    # 1. BUSCAR EN DB
+                    respuesta_db = buscar_en_base_datos(prompt)
+                    
+                    if respuesta_db:
+                        st.success("📚 Memoria Externa")
+                        st.markdown(respuesta_db)
+                        st.session_state.messages.append({"role": "assistant", "content": respuesta_db})
+                    else:
+                        # 2. CONSULTAR IA
+                        try:
+                            # Enviamos historial breve
+                            history = [{"role": "model" if m["role"]=="assistant" else "user", "parts": [m["content"]]} 
+                                       for m in st.session_state.messages[-6:-1]]
+                            
+                            # Prompt aumentado con idioma
+                            full_query = f"[User Language: {idioma_app}] [Intention: Philological/Grammatical Analysis] {prompt}"
+                            
+                            chat = model.start_chat(history=history)
+                            with st.spinner(t["spinner"]):
+                                response = chat.send_message(full_query)
+                                texto_ia = response.text
+                                st.markdown(texto_ia)
+                                st.session_state.messages.append({"role": "assistant", "content": texto_ia})
+                                
+                                # Guardar en segundo plano
+                                guardar_nueva_entrada(prompt, texto_ia)
+                        except Exception as e:
+                            st.error(f"Error: {str(e)}")
+            st.rerun()
+
+    st.divider()
+    form_url = "https://docs.google.com/forms/d/tu-form-id"
+    st.link_button(t["cta_btn"], form_url, use_container_width=True, type="primary")
